@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef } from 'react'
 import { resumeReducer } from './resumeReducer'
-import { sampleResume, emptyResume } from '../data/sampleResume'
+import { emptyResume } from '../data/sampleResume'
+import { getSample, SAMPLES } from '../data/samples'
 
 const STORAGE_KEY = 'resume-builder:document:v1'
 
@@ -16,7 +17,7 @@ function loadInitial() {
   } catch {
     /* corrupted or unavailable storage — fall back to the sample */
   }
-  return sampleResume
+  return structuredClone(SAMPLES[0].document)
 }
 
 export function ResumeProvider({ children }) {
@@ -39,7 +40,7 @@ export function ResumeProvider({ children }) {
     () => ({
       resume,
       dispatch,
-      loadSample: () => dispatch({ type: 'LOAD', resume: structuredClone(sampleResume) }),
+      loadSample: (id) => dispatch({ type: 'LOAD', resume: structuredClone(getSample(id).document) }),
       clearAll: () => dispatch({ type: 'LOAD', resume: structuredClone(emptyResume) }),
     }),
     [resume],

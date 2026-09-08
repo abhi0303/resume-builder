@@ -1,5 +1,6 @@
 import RichText from '../../components/RichText'
-import { isEmptyText } from '../../utils/richText'
+import { isEmptyText, plainText } from '../../utils/richText'
+import { RATING_MAX } from '../../data/sectionTypes'
 import { DEFAULT_BANNER, bannerPalette } from './theme'
 import './classicTeal.css'
 
@@ -30,9 +31,15 @@ const renderers = {
               </span>
             ) : null}
           </div>
-          {has(item.organization) ? (
+          {has(item.organization) || has(item.location) ? (
             <div className="ct-entry__org">
               <RichText value={item.organization} />
+              {has(item.location) ? (
+                <>
+                  <span className="ct-dot"> · </span>
+                  <RichText value={item.location} />
+                </>
+              ) : null}
             </div>
           ) : null}
           {item.bullets?.some((bullet) => has(bullet.text)) ? (
@@ -82,6 +89,11 @@ const renderers = {
               <RichText value={item.institution} />
             </div>
           ) : null}
+          {has(item.location) ? (
+            <div className="ct-edu__meta">
+              <RichText value={item.location} />
+            </div>
+          ) : null}
           {has(item.score) ? (
             <div className="ct-edu__meta">
               <RichText value={item.score} />
@@ -93,6 +105,46 @@ const renderers = {
               <RichText value={item.badge} />
             </div>
           ) : null}
+        </div>
+      ))}
+    </div>
+  ),
+
+  highlights: (section) => (
+    <div className="ct-highlights">
+      {(section.items || []).map((item) => (
+        <div className="ct-highlight" key={item.id}>
+          <h4 className="ct-highlight__title">
+            {has(item.icon) ? <span className="ct-highlight__icon">{plainText(item.icon)}</span> : null}
+            <RichText value={item.title} />
+          </h4>
+          {has(item.description) ? (
+            <p className="ct-highlight__text">
+              <RichText value={item.description} />
+            </p>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  ),
+
+  ratings: (section) => (
+    <div className="ct-ratings">
+      {(section.items || []).map((item) => (
+        <div className="ct-rating" key={item.id}>
+          <span className="ct-rating__label">
+            <RichText value={item.label} />
+          </span>
+          {has(item.note) ? (
+            <span className="ct-rating__note">
+              <RichText value={item.note} />
+            </span>
+          ) : null}
+          <span className="ct-rating__dots">
+            {Array.from({ length: RATING_MAX }, (_, index) => (
+              <span key={index} className={`ct-dot-mark${index < (item.level ?? 0) ? ' ct-dot-mark--on' : ''}`} />
+            ))}
+          </span>
         </div>
       ))}
     </div>

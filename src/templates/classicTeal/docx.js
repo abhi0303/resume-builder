@@ -11,7 +11,8 @@ import {
   WidthType,
 } from 'docx'
 import { NO_BORDERS, docxRuns, filled, fontSize, px, shadedCell } from '../../export/docxKit'
-import { isEmptyText } from '../../utils/richText'
+import { isEmptyText, plainText } from '../../utils/richText'
+import { RATING_MAX } from '../../data/sectionTypes'
 import { stripHash } from '../../utils/color'
 import { DEFAULT_BANNER, bannerPalette } from './theme'
 
@@ -83,13 +84,13 @@ const renderers = {
           { color: MUTED, size: fontSize(10.5) },
         ),
       )
-      if (!isEmptyText(item.organization)) {
-        blocks.push(
-          new Paragraph({
-            spacing: { before: 20, after: 60 },
-            children: docxRuns(item.organization, { italics: true, color: ACCENT, size: fontSize(11) }),
-          }),
-        )
+      if (!isEmptyText(item.organization) || !isEmptyText(item.location)) {
+        const org = [...docxRuns(item.organization, { italics: true, color: ACCENT, size: fontSize(11) })]
+        if (!isEmptyText(item.location)) {
+          if (org.length) org.push(run(' · ', { italics: true, color: ACCENT, size: fontSize(11) }))
+          org.push(...docxRuns(item.location, { italics: true, color: ACCENT, size: fontSize(11) }))
+        }
+        blocks.push(new Paragraph({ spacing: { before: 20, after: 60 }, children: org }))
       }
       blocks.push(...bulletList(filled(item.bullets)))
       return blocks
@@ -120,7 +121,7 @@ const renderers = {
                       { bold: true, color: INK, size: fontSize(12) },
                       { color: MUTED, size: fontSize(10.5) },
                     ),
-                    ...[item.institution, item.score]
+                    ...[item.institution, item.location, item.score]
                       .filter((line) => !isEmptyText(line))
                       .map(
                         (line) =>
@@ -147,6 +148,39 @@ const renderers = {
           ],
         }),
     ),
+
+  highlights: (section) =>
+    (section.items || []).flatMap((item, index) => {
+      const title = []
+      if (!isEmptyText(item.icon)) title.push(run(`${plainText(item.icon)}  `, { color: ACCENT, size: fontSize(11.5) }))
+      title.push(...docxRuns(item.title, { bold: true, color: INK, size: fontSize(11.5) }))
+      return [
+        ...(index ? [new Paragraph({ spacing: { after: 0 }, children: [run('', { size: 8 })] })] : []),
+        new Paragraph({ spacing: { after: 20 }, children: title }),
+        ...(isEmptyText(item.description)
+          ? []
+          : [
+              new Paragraph({
+                spacing: { after: 0, line: 270 },
+                children: docxRuns(item.description, { color: '555555', size: fontSize(11) }),
+              }),
+            ]),
+      ]
+    }),
+
+  ratings: (section, width) =>
+    (section.items || []).map((item) => {
+      const dots = '●'.repeat(Math.max(0, Math.min(RATING_MAX, item.level ?? 0))).padEnd(RATING_MAX, '○')
+      const children = docxRuns(item.label, { color: TEXT, size: fontSize(11) })
+      children.push(run('\t', {}))
+      if (!isEmptyText(item.note)) children.push(...docxRuns(item.note, { color: MUTED, size: fontSize(10.5) }))
+      children.push(run(`  ${dots}`, { color: ACCENT, size: fontSize(10) }))
+      return new Paragraph({
+        spacing: { after: 40 },
+        tabStops: [{ type: TabStopType.RIGHT, position: width }],
+        children,
+      })
+    }),
 
   skillGroups: (section) =>
     (section.groups || []).flatMap((group, index) => {

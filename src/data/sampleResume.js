@@ -11,11 +11,11 @@ export const sampleResume = {
   templateId: 'classicTeal',
   theme: { bannerBg: '#14384a', syncHeadingColors: true },
   header: {
-    name: 'PURVEE',
+    name: 'ABHINAV SINGH',
     title: 'Heritage Management & Archaeology Professional',
-    phone: '+91-9097811415',
-    email: 'purveesingh12@gmail.com',
-    address: '90, Anukampa Apartment, Indirapuram, Ghaziabad, Uttar Pradesh',
+    phone: '+91-989xxxx989',
+    email: 'abhinav@domain.com',
+    address: '9/14, Shanti Niketan Apartment, Ghaziabad, Uttar Pradesh',
   },
   sections: [
     {

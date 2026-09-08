@@ -1,6 +1,10 @@
 :root {
   --bg: #f4f6f8;
   --panel: #ffffff;
+  /* Editor sits on a tinted ground so the white cards read as separate
+     containers, with a deeper tint again for their headers. */
+  --editor-bg: #eef2f5;
+  --card-head: #dfe9ef;
   --line: #e2e8ec;
   --line-strong: #cbd6dd;
   --text: #1f2d35;
@@ -11,6 +15,11 @@
   --danger: #c0392b;
   --warn: #b8860b;
   --radius: 10px;
+  --radius-sm: 8px;
+  --radius-lg: 14px;
+  /* One control height across the whole app: bar, editor, dialogs. */
+  --control-h: 34px;
+  --control-h-sm: 28px;
   --shadow: 0 1px 2px rgba(20, 56, 74, 0.06), 0 6px 18px rgba(20, 56, 74, 0.06);
   color-scheme: light;
 }
@@ -23,10 +32,14 @@ html,
 body,
 #root {
   height: 100%;
+  /* dvh tracks the collapsing address bar on phones; vh alone clips the layout */
+  height: 100dvh;
 }
 
 body {
   margin: 0;
+  /* Nothing in this app should ever scroll the page sideways. */
+  overflow-x: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -52,21 +65,44 @@ select {
   flex-direction: column;
   height: 100%;
   min-height: 0;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 .app__body {
   display: flex;
   flex: 1;
   min-height: 0;
+  min-width: 0;
 }
 
 .app__editor {
+  --editor-pad: 18px;
+  --sticky-top: 14px;
   flex: 0 0 var(--editor-width, 46%);
   min-width: 0;
-  background: var(--panel);
+  background: var(--editor-bg);
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 18px 18px 120px;
+  /* No padding-top: the scrim below occupies that strip instead. */
+  padding: 0 var(--editor-pad) 120px;
+}
+
+/**
+ * An opaque strip pinned above the sticky section headers. Without it, content
+ * scrolling through the gap between the toolbar and a stuck header stays visible
+ * and gets sliced by the header's edge. Painted above the cards (positive
+ * z-index) while the headers stop just below it.
+ */
+.app__editor::before {
+  content: '';
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: var(--sticky-top);
+  margin: 0 calc(var(--editor-pad) * -1);
+  background: var(--editor-bg);
 }
 
 .app__editor--collapsed {
@@ -82,75 +118,164 @@ select {
   background: #e9edf0;
 }
 
-@media (max-width: 980px) {
-  .app__body {
-    flex-direction: column;
-  }
-  .app__editor {
-    flex: none;
-    border-bottom: 1px solid var(--line);
-    max-height: 55vh;
-  }
 
-  .app__editor--collapsed {
-    display: none;
-  }
-
-  .splitter {
-    display: none;
-  }
-}
 
 /* ---------------- top bar ---------------- */
 .topbar {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 10px 18px;
+  gap: 8px;
+  min-height: 58px;
+  padding: 10px 16px;
+  padding-top: max(10px, env(safe-area-inset-top));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
   background: var(--accent);
   color: #fff;
-  flex-wrap: wrap;
 }
 
 .topbar__brand {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-right: auto;
+  align-items: center;
+  flex: 0 0 auto;
+  margin-right: 4px;
 }
 
-.topbar__brand strong {
-  font-size: 15px;
-  letter-spacing: 0.3px;
+.app-icon {
+  display: block;
 }
 
-.topbar__brand span {
-  font-size: 11.5px;
-  color: #a9c2cc;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.topbar__spacer {
+  flex: 1 1 auto;
 }
 
 .topbar__group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  min-width: 0;
 }
 
-.topbar select {
-  background: #1d4d63;
+.topbar__more {
+  display: none;
+}
+
+/* Every bar control: same height, radius, weight and hover treatment. */
+.tb-btn {
+  height: var(--control-h);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.1);
+  color: #e6eff2;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.14s, border-color 0.14s, color 0.14s;
+}
+
+.tb-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.18);
   color: #fff;
-  border: 1px solid #2f6d86;
-  border-radius: 7px;
-  padding: 6px 10px;
+}
+
+.tb-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tb-btn--icon {
+  width: var(--control-h);
+  padding: 0;
+}
+
+.tb-btn--outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.tb-btn--outline:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.tb-btn--primary {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
+}
+
+.tb-btn--primary:hover:not(:disabled) {
+  background: #34909f;
+  border-color: #34909f;
+}
+
+.tb-select {
+  height: var(--control-h);
+  min-width: 0;
+  max-width: 200px;
+  padding: 0 30px 0 11px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background-color: rgba(255, 255, 255, 0.1);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e6eff2' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.tb-select:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.tb-select option {
+  color: #1f2d35;
+  background: #fff;
+}
+
+.tb-divider {
+  flex: 0 0 auto;
+  width: 1px;
+  height: 20px;
+  margin: 0 2px;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .btn {
+  height: var(--control-h);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   border: 1px solid var(--line-strong);
   background: #fff;
   color: var(--text);
-  border-radius: 8px;
-  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
   transition: background 0.12s, border-color 0.12s, opacity 0.12s;
 }
 
@@ -159,7 +284,9 @@ select {
 }
 
 .btn:disabled {
-  opacity: 0.55;
+  color: #9daab2;
+  background: #f4f7f9;
+  border-color: var(--line);
   cursor: not-allowed;
 }
 
@@ -173,18 +300,13 @@ select {
   background: #24697a;
 }
 
-.btn--ghost {
-  background: transparent;
-  border-color: #33637a;
-  color: #dbe8ed;
-}
 
-.btn--ghost:hover:not(:disabled) {
-  background: #1d4d63;
-}
+
+
 
 .btn--sm {
-  padding: 4px 9px;
+  height: var(--control-h-sm);
+  padding: 0 10px;
   font-size: 12px;
   border-radius: 7px;
 }
@@ -200,21 +322,55 @@ select {
 
 /* ---------------- editor cards ---------------- */
 .card {
+  min-width: 0;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   margin-bottom: 14px;
-  overflow: hidden;
 }
 
 .card__head {
+  position: sticky;
+  top: var(--sticky-top, 0px);
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
-  padding: 10px 12px;
-  background: #f8fafb;
-  border-bottom: 1px solid var(--line);
+  min-width: 0;
+  min-height: 46px;
+  padding: 9px 12px;
+  /* Tinted and slightly raised so you can tell one section from the next while
+     scrolling, and so the heading stays visible inside a long section. */
+  /* Fully opaque: nothing behind a stuck header should read through it. */
+  background: var(--card-head);
+  border-bottom: 1px solid var(--line-strong);
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-shadow: 0 6px 12px -10px rgba(20, 56, 74, 0.55);
+}
+
+.card__head--stuck {
+  border-radius: 0;
+  box-shadow: 0 8px 16px -12px rgba(20, 56, 74, 0.75);
+}
+
+.card--collapsed .card__head {
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+
+.card__headline-sep {
+  flex: 0 0 auto;
+  width: 1px;
+  height: 18px;
+  margin: 0 3px;
+  background: var(--line-strong);
+}
+
+/* Destructive, so it is tinted apart from the neutral controls — and it sits in
+   the flow rather than floating, which is what made it collide with the swatch. */
+.card__delete {
+  color: #c58a81;
 }
 
 .card__head--stack {
@@ -226,17 +382,52 @@ select {
 .card__headline {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 6px;
+  min-width: 0;
+}
+
+/* Only the heading input gives way; every control keeps its size so none can be
+   squeezed or pushed past the card edge. */
+.card__headline > .icon-btn,
+.card__headline > .counter,
+.card__actions > .icon-btn,
+.card__actions > .color-host {
+  flex: 0 0 auto;
+}
+
+/* The column select shrinks before the badge is forced to overflow. */
+.card__meta .select-inline {
+  min-width: 0;
+  flex: 0 1 auto;
 }
 
 .card__tools {
   display: flex;
   align-items: center;
-  gap: 3px;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
 }
 
-.card__tools-spacer {
-  flex: 1;
+/* What the section is … */
+.card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* … and what you can do with it. */
+.card__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 2px;
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .card__title {
@@ -259,6 +450,9 @@ select {
 }
 
 .section-card__badge {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 10.5px;
   font-weight: 700;
   text-transform: uppercase;
@@ -271,7 +465,13 @@ select {
 }
 
 .section-card--hidden {
-  opacity: 0.6;
+  border-style: dashed;
+  background: #fafcfd;
+}
+
+.section-card--hidden .heading-input,
+.section-card--hidden .card__title {
+  color: #7f929c;
 }
 
 .heading-input {
@@ -303,9 +503,9 @@ select {
   border: 1px solid transparent;
   background: transparent;
   color: var(--muted);
-  border-radius: 6px;
-  width: 26px;
-  height: 26px;
+  border-radius: 7px;
+  width: 30px;
+  height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -314,13 +514,20 @@ select {
   flex: 0 0 auto;
 }
 
+.ui-icon {
+  width: 16px;
+  height: 16px;
+}
+
 .icon-btn:hover:not(:disabled) {
   background: #eef3f5;
   color: var(--accent);
 }
 
 .icon-btn:disabled {
-  opacity: 0.3;
+  /* Muted with colour, never opacity — an opacity below 1 creates a stacking
+     context, which would lift the button above the sticky section header. */
+  color: #bcc7ce;
   cursor: not-allowed;
 }
 
@@ -332,6 +539,7 @@ select {
 /* ---------------- fields ---------------- */
 .field {
   margin-bottom: 11px;
+  min-width: 0;
 }
 
 .field:last-child {
@@ -372,8 +580,10 @@ select {
 .field input,
 .field textarea {
   width: 100%;
+  max-width: 100%;
+  min-height: 36px;
   border: 1px solid var(--line-strong);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 8px 10px;
   background: #fff;
   transition: border-color 0.12s, box-shadow 0.12s;
@@ -418,7 +628,7 @@ select {
 .entry {
   border: 1px solid var(--line);
   border-left: 3px solid var(--teal);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 10px;
   margin-bottom: 10px;
   background: #fcfdfe;
@@ -452,6 +662,7 @@ select {
   display: flex;
   align-items: flex-start;
   gap: 6px;
+  min-width: 0;
   margin-bottom: 7px;
 }
 
@@ -477,9 +688,10 @@ select {
 }
 
 .select-inline {
+  height: var(--control-h-sm);
   border: 1px solid var(--line-strong);
   border-radius: 7px;
-  padding: 4px 6px;
+  padding: 0 7px;
   font-size: 11.5px;
   background: #fff;
   color: var(--muted);
@@ -490,7 +702,7 @@ select {
   border: 1px dashed var(--line-strong);
   border-radius: var(--radius);
   padding: 12px;
-  background: #fbfdfe;
+  background: rgba(255, 255, 255, 0.65);
 }
 
 .add-section__title {
@@ -685,8 +897,8 @@ select {
 }
 
 .fmt-btn {
-  min-width: 30px;
-  height: 28px;
+  min-width: 32px;
+  height: 30px;
   padding: 0 4px;
   border: 1px solid transparent;
   background: transparent;
@@ -744,9 +956,10 @@ select {
 /* ---------------- rich text field ---------------- */
 .field__editable {
   width: 100%;
+  max-width: 100%;
   min-height: 36px;
   border: 1px solid var(--line-strong);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 8px 10px;
   background: #fff;
   font-size: 13px;
@@ -786,7 +999,7 @@ select {
 .dialog {
   width: min(440px, 100%);
   background: var(--panel);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   padding: 20px 22px 18px;
   box-shadow: 0 18px 48px rgba(15, 35, 45, 0.3);
 }
@@ -802,6 +1015,56 @@ select {
   font-size: 13px;
   line-height: 1.55;
   color: var(--muted);
+}
+
+.dialog__field {
+  display: block;
+  margin-bottom: 18px;
+}
+
+.dialog__field > span:first-child {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.dialog__input {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.dialog__input:focus-within {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(43, 124, 143, 0.14);
+}
+
+.dialog__input input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 10px;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  background: transparent;
+}
+
+.dialog__suffix {
+  padding: 9px 11px;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  background: #f2f6f8;
+  border-left: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .dialog__actions {
@@ -921,19 +1184,14 @@ select {
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.btn--theme {
-  background: #1d4d63;
-  border-color: #2f6d86;
-}
+
 
 .theme-chip {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-right: 5px;
-  vertical-align: -3px;
-  border-radius: 4px;
-  /* A white ring keeps the swatch readable even when it matches the top bar. */
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  /* A white ring keeps the swatch readable even when it matches the bar. */
   border: 2px solid rgba(255, 255, 255, 0.9);
 }
 
@@ -1003,4 +1261,301 @@ select {
 .splitter__arrow:disabled {
   opacity: 0.32;
   cursor: not-allowed;
+}
+
+/* ---------------- dropdown menu ---------------- */
+.menu-host {
+  position: relative;
+  display: inline-flex;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  z-index: 60;
+  min-width: 232px;
+  padding: 5px;
+  background: #fff;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(20, 56, 74, 0.18);
+}
+
+.menu--right {
+  right: 0;
+}
+
+.menu__item {
+  display: block;
+  width: 100%;
+  padding: 7px 9px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  text-align: left;
+}
+
+.menu__item:hover {
+  background: var(--accent-soft);
+}
+
+.menu__title {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.menu__hint {
+  display: block;
+  margin-top: 1px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.menu__label {
+  padding: 6px 9px 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+
+.menu__sep {
+  height: 1px;
+  margin: 5px 4px;
+  background: var(--line);
+}
+
+.menu__item--danger .menu__title {
+  color: var(--danger);
+}
+
+.menu__item:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------------- rating picker ---------------- */
+.rating-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rating-dot {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1;
+}
+
+.rating-dot--on {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+.rating-dot--zero {
+  border-style: dashed;
+}
+
+/* ---------------- mobile pane switcher ---------------- */
+.mobile-tabs {
+  display: none;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.mobile-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px 6px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mobile-tab svg {
+  width: 17px;
+  height: 17px;
+}
+
+.mobile-tab--on {
+  color: var(--teal);
+  box-shadow: inset 0 -2px 0 var(--teal);
+}
+
+/* ---------------- responsive ---------------- */
+@media (max-width: 860px) {
+  .app__body {
+    flex-direction: column;
+  }
+
+  /* One pane at a time: a side-by-side split is unusable at phone widths. */
+  .app__editor,
+  .app__preview {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .app__body--edit .app__preview,
+  .app__body--preview .app__editor,
+  .app__editor--collapsed,
+  .splitter {
+    display: none;
+  }
+
+  .mobile-tabs {
+    display: flex;
+  }
+
+  .app__editor {
+    --editor-pad: 12px;
+    --sticky-top: 12px;
+    padding: 0 var(--editor-pad) 40px;
+  }
+
+  .topbar {
+    gap: 6px;
+    min-height: 54px;
+    padding: 8px 12px;
+    padding-top: max(8px, env(safe-area-inset-top));
+  }
+
+  /* One row, always: the template fills the space and the rest folds into ⋯ */
+  .topbar__spacer {
+    display: none;
+  }
+
+  .topbar__group--doc {
+    flex: 1 1 auto;
+  }
+
+  .tb-select {
+    flex: 1 1 auto;
+    max-width: none;
+  }
+
+  .topbar__optional {
+    display: none;
+  }
+
+  .topbar__more {
+    display: inline-flex;
+  }
+
+  .formatbar {
+    padding: 6px 10px;
+  }
+
+  .formatbar__label,
+  .formatbar__hint {
+    display: none;
+  }
+
+  .preview__scroll {
+    padding: 14px;
+  }
+
+  /* 16px keeps iOS from zooming the page when a field takes focus. */
+  .field__editable,
+  .field input,
+  .heading-input,
+  .dialog__input input {
+    font-size: 16px;
+  }
+
+  .dialog {
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 560px) {
+  .grid-2,
+  .type-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card__head {
+    padding: 9px 10px;
+  }
+
+  .card__body,
+  .add-section {
+    padding: 10px;
+  }
+
+  .entry {
+    padding: 9px;
+  }
+
+  .topbar__group:last-child {
+    margin-left: auto;
+  }
+}
+
+/* Fingers need larger targets than a mouse pointer. */
+@media (pointer: coarse) {
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .fmt-btn {
+    min-width: 36px;
+    height: 34px;
+  }
+
+  .color-swatch {
+    width: 26px;
+    height: 26px;
+  }
+
+  .color-panel__grid {
+    grid-template-columns: repeat(5, 26px);
+  }
+
+  .rating-dot {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* ---------------- narrow phones: one predictable header shape ---------------- */
+@media (max-width: 500px) {
+  /* Meta takes its own line so the action row never interleaves with it. */
+  .card__meta {
+    flex: 1 1 100%;
+  }
+
+  .card__actions {
+    margin-left: auto;
+  }
+
+  .card__meta .select-inline {
+    flex: 1 1 auto;
+    max-width: 160px;
+  }
+
+  /* The cap is still enforced by maxLength; the counter is the first thing to
+     go when space is tight, so the delete button always has room. */
+  .card__headline > .counter {
+    display: none;
+  }
+
+  .add-section .type-btn {
+    align-items: center;
+  }
 }

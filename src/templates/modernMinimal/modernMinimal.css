@@ -1,0 +1,304 @@
+/* Modern Minimal — headerless two-column layout with a single accent colour.
+   px at 96dpi so the on-screen page equals the exported page. */
+
+.tpl-modern-minimal {
+  --mm-accent: #3cb9d2;
+  --mm-ink: #262626;
+  --mm-text: #333333;
+  --mm-muted: #6b6b6b;
+  --mm-rule: #a9a9a9;
+
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: 42px 48px 26px;
+  background: #ffffff;
+  color: var(--mm-text);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+
+.tpl-modern-minimal * {
+  box-sizing: border-box;
+}
+
+/* ---------- header ---------- */
+.mm-name {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.12;
+  font-weight: 700;
+  color: var(--mm-ink);
+  letter-spacing: -0.2px;
+  word-break: break-word;
+}
+
+.mm-title {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--mm-accent);
+  word-break: break-word;
+}
+
+.mm-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 16px;
+  margin-top: 11px;
+  font-size: 10.5px;
+  color: #555555;
+}
+
+.mm-contact {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mm-icon {
+  width: 11px;
+  height: 11px;
+  margin-right: 5px;
+  flex: 0 0 auto;
+  color: #9a9a9a;
+}
+
+/* ---------- body grid ---------- */
+.mm-body {
+  display: flex;
+  gap: 40px;
+  margin-top: 21px;
+  align-items: flex-start;
+}
+
+.mm-col--main {
+  flex: 0 0 53%;
+  max-width: 53%;
+}
+
+.mm-col--side {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ---------- section chrome ---------- */
+.mm-section {
+  margin-bottom: 14px;
+}
+
+.mm-section:last-child {
+  margin-bottom: 0;
+}
+
+.mm-section__title {
+  margin: 0 0 9px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--mm-rule);
+  color: var(--mm-muted);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  word-break: break-word;
+}
+
+/* ---------- summary ---------- */
+.mm-summary {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* ---------- entries ---------- */
+.mm-entry {
+  margin-bottom: 10px;
+}
+
+.mm-entry:last-child {
+  margin-bottom: 0;
+}
+
+.mm-entry__title {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--mm-ink);
+}
+
+.mm-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 2px;
+  font-size: 10px;
+  color: var(--mm-muted);
+}
+
+.mm-meta__primary {
+  flex: 0 0 46%;
+  min-width: 0;
+  font-size: 10.5px;
+  color: var(--mm-accent);
+  word-break: break-word;
+}
+
+.mm-meta__item {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.mm-entry__badge {
+  margin-top: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--mm-accent);
+}
+
+/* ---------- bullets ---------- */
+.mm-bullets {
+  margin: 5px 0 0;
+  padding-left: 14px;
+  list-style: none;
+}
+
+.mm-bullets li {
+  position: relative;
+  margin-bottom: 1.5px;
+  line-height: 1.5;
+}
+
+.mm-bullets li:last-child {
+  margin-bottom: 0;
+}
+
+.mm-bullets li::before {
+  content: '';
+  position: absolute;
+  left: -11px;
+  top: 6px;
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+  background: #555555;
+}
+
+/* ---------- grouped tags, read as prose ---------- */
+.mm-group {
+  margin-bottom: 11px;
+}
+
+.mm-group:last-child {
+  margin-bottom: 0;
+}
+
+.mm-group__label {
+  margin: 0 0 2px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--mm-accent);
+}
+
+.mm-group__items {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ---------- cards ---------- */
+.mm-cards--grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px 20px;
+}
+
+.mm-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 11px;
+}
+
+.mm-cards--grid .mm-card {
+  margin-bottom: 0;
+}
+
+.mm-cards:not(.mm-cards--grid) .mm-card:last-child {
+  margin-bottom: 0;
+}
+
+.mm-card__icon {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #eef6f9;
+  color: var(--mm-accent);
+  font-size: 11px;
+  line-height: 26px;
+  text-align: center;
+}
+
+.mm-card__body {
+  min-width: 0;
+}
+
+.mm-card__title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--mm-ink);
+}
+
+/* Certifications and the like sit in the main column and read as accented links. */
+.mm-cards--grid .mm-card__title {
+  font-weight: 400;
+  color: var(--mm-accent);
+}
+
+.mm-card__text {
+  margin: 2px 0 0;
+  color: #444444;
+  line-height: 1.5;
+}
+
+/* ---------- ratings ---------- */
+.mm-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+}
+
+.mm-rating:last-child {
+  margin-bottom: 0;
+}
+
+.mm-rating__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 11px;
+  color: var(--mm-ink);
+}
+
+.mm-rating__note {
+  flex: 0 0 auto;
+  margin-right: 10px;
+  font-size: 10.5px;
+  color: #555555;
+}
+
+.mm-rating__dots {
+  flex: 0 0 auto;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.mm-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d5d5d5;
+}
+
+.mm-dot--on {
+  background: #2b2b2b;
+}

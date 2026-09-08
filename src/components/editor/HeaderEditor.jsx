@@ -38,7 +38,7 @@ export default function HeaderEditor({ header, template, dispatch }) {
           value={header.address}
           limit={limit('address')}
           onChange={(address) => set({ address })}
-          hint="Keep it to a single line — the banner does not wrap gracefully beyond two."
+          hint="Keep it to a single line — a long address pushes the header out of shape."
         />
       </div>
     </div>

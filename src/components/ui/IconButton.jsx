@@ -1,8 +1,8 @@
-export default function IconButton({ label, onClick, disabled, danger, children }) {
+export default function IconButton({ label, onClick, disabled, danger, className = '', children }) {
   return (
     <button
       type="button"
-      className={`icon-btn${danger ? ' icon-btn--danger' : ''}`}
+      className={`icon-btn${danger ? ' icon-btn--danger' : ''}${className ? ` ${className}` : ''}`}
       title={label}
       aria-label={label}
       disabled={disabled}

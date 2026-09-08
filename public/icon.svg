@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Resume Builder">
+  <rect width="64" height="64" rx="15" fill="#14384a"/>
+  <rect x="16" y="12" width="32" height="40" rx="4" fill="#ffffff"/>
+  <path d="M16 16a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v7H16z" fill="#2b7c8f"/>
+  <circle cx="23" cy="17.5" r="3.2" fill="#ffffff"/>
+  <rect x="29.5" y="15" width="14" height="2" rx="1" fill="#ffffff" opacity="0.85"/>
+  <rect x="29.5" y="19" width="9" height="2" rx="1" fill="#ffffff" opacity="0.6"/>
+  <rect x="21" y="29" width="22" height="2.4" rx="1.2" fill="#c7d5da"/>
+  <rect x="21" y="35" width="22" height="2.4" rx="1.2" fill="#c7d5da"/>
+  <rect x="21" y="41" width="13" height="2.4" rx="1.2" fill="#c7d5da"/>
+</svg>

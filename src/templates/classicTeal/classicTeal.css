@@ -273,3 +273,73 @@
 .ct-square--gold {
   background: var(--ct-gold);
 }
+
+/* ---------- titled cards ---------- */
+.ct-highlight {
+  margin-bottom: 9px;
+}
+
+.ct-highlight:last-child {
+  margin-bottom: 0;
+}
+
+.ct-highlight__title {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ct-ink);
+}
+
+.ct-highlight__icon {
+  display: inline-block;
+  margin-right: 5px;
+  color: var(--ct-accent);
+}
+
+.ct-highlight__text {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: #555555;
+  line-height: 1.45;
+}
+
+/* ---------- rated list ---------- */
+.ct-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.ct-rating:last-child {
+  margin-bottom: 0;
+}
+
+.ct-rating__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 11px;
+}
+
+.ct-rating__note {
+  flex: 0 0 auto;
+  margin-right: 9px;
+  font-size: 10.5px;
+  color: var(--ct-muted);
+}
+
+.ct-rating__dots {
+  flex: 0 0 auto;
+  display: inline-flex;
+  gap: 3px;
+}
+
+.ct-dot-mark {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d5dde0;
+}
+
+.ct-dot-mark--on {
+  background: var(--ct-accent);
+}

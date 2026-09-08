@@ -1,17 +1,21 @@
-import { createContext, useCallback, useContext, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import Dialog from '../components/ui/Dialog'
 
 const DialogContext = createContext(null)
 
 /**
- * Promise-based confirmations:
+ * Promise-based dialogs:
  *   if (await confirm({ title: 'Delete section?', danger: true })) …
+ *   const name = await prompt({ title: 'Download PDF', input: { defaultValue } })
+ *
+ * `confirm` resolves true/false; `prompt` resolves the trimmed string, or false
+ * when dismissed — so `if (!name) return` covers cancelling either way.
  */
 export function DialogProvider({ children }) {
   const [request, setRequest] = useState(null)
   const resolver = useRef(null)
 
-  const confirm = useCallback(
+  const open = useCallback(
     (options) =>
       new Promise((resolve) => {
         resolver.current = resolve
@@ -27,12 +31,21 @@ export function DialogProvider({ children }) {
     resolve?.(result)
   }
 
+  const api = useMemo(
+    () => ({
+      confirm: (options) => open(options),
+      prompt: (options) => open({ ...options, input: options.input || {} }),
+    }),
+    [open],
+  )
+
   return (
-    <DialogContext.Provider value={confirm}>
+    <DialogContext.Provider value={api}>
       {children}
-      {request ? <Dialog {...request} onConfirm={() => settle(true)} onCancel={() => settle(false)} /> : null}
+      {request ? <Dialog {...request} onConfirm={(value) => settle(value)} onCancel={() => settle(false)} /> : null}
     </DialogContext.Provider>
   )
 }
 
-export const useConfirm = () => useContext(DialogContext)
+export const useConfirm = () => useContext(DialogContext).confirm
+export const usePrompt = () => useContext(DialogContext).prompt

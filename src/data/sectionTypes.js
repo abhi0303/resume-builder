@@ -43,7 +43,7 @@ export const SECTION_TYPES = {
     hint: 'Role + organisation + dates + bullets. Professional Experience, Internships, Volunteering…',
     defaultHeading: 'PROFESSIONAL EXPERIENCE',
     defaultColumn: 'main',
-    limits: { heading: 42, title: 70, organization: 80, dateRange: 22, bullet: 200 },
+    limits: { heading: 42, title: 70, organization: 80, dateRange: 22, location: 28, bullet: 200 },
     create: (heading) => ({
       id: uid('sec'),
       type: 'experience',
@@ -79,7 +79,7 @@ export const SECTION_TYPES = {
     hint: 'Qualification cards with year, institute, score and an optional highlight badge.',
     defaultHeading: 'EDUCATION',
     defaultColumn: 'side',
-    limits: { heading: 42, degree: 46, institution: 52, date: 12, score: 26, badge: 26 },
+    limits: { heading: 42, degree: 46, institution: 52, date: 12, location: 28, score: 26, badge: 26 },
     create: (heading) => ({
       id: uid('sec'),
       type: 'education',
@@ -153,6 +153,7 @@ export function createExperienceItem() {
     title: '',
     organization: '',
     dateRange: '',
+    location: '',
     bullets: [createBulletItem()],
   }
 }
@@ -167,6 +168,7 @@ export function createEducationItem() {
     degree: '',
     institution: '',
     date: '',
+    location: '',
     score: '',
     badge: '',
   }
@@ -204,42 +206,6 @@ export const SECTION_SHAPE = {
   experience: { entriesKey: 'items', childrenKey: 'bullets', createEntry: createExperienceItem, createChild: createBulletItem },
   bullets: { entriesKey: 'items', childrenKey: null, createEntry: createBulletItem },
   education: { entriesKey: 'items', childrenKey: null, createEntry: createEducationItem },
-  highlights: {
-    id: 'highlights',
-    label: 'Titled cards',
-    icon: '◫',
-    hint: 'Title + short description. Projects, Key Achievements, Certifications, Awards…',
-    defaultHeading: 'PROJECTS & PORTFOLIO',
-    defaultColumn: 'side',
-    limits: { heading: 42, title: 48, description: 220, icon: 2 },
-    create: (heading) => ({
-      id: uid('sec'),
-      type: 'highlights',
-      heading: heading || 'PROJECTS & PORTFOLIO',
-      column: 'side',
-      visible: true,
-      items: [createHighlightItem()],
-    }),
-  },
-
-  ratings: {
-    id: 'ratings',
-    label: 'Rated list',
-    icon: '◍',
-    hint: 'A label with a level out of five. Languages, tools, proficiencies…',
-    defaultHeading: 'LANGUAGES',
-    defaultColumn: 'side',
-    limits: { heading: 42, label: 28, note: 18 },
-    create: (heading) => ({
-      id: uid('sec'),
-      type: 'ratings',
-      heading: heading || 'LANGUAGES',
-      column: 'side',
-      visible: true,
-      items: [createRatingItem()],
-    }),
-  },
-
   skillGroups: { entriesKey: 'groups', childrenKey: 'items', createEntry: createSkillGroup, createChild: createBulletItem },
   highlights: { entriesKey: 'items', childrenKey: null, createEntry: createHighlightItem },
   ratings: { entriesKey: 'items', childrenKey: null, createEntry: createRatingItem },

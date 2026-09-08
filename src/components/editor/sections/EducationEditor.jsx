@@ -44,6 +44,13 @@ export default function EducationEditor({ section, template, actions }) {
             placeholder="Banaras Hindu University (BHU)"
             onChange={(institution) => actions.updateEntry(item.id, { institution })}
           />
+          <Field
+            label="Location (optional)"
+            value={item.location}
+            limit={limit('location')}
+            placeholder="West Lafayette, IN"
+            onChange={(location) => actions.updateEntry(item.id, { location })}
+          />
           <div className="grid-2">
             <Field
               label="Score"

@@ -48,6 +48,13 @@ export default function ExperienceEditor({ section, template, actions }) {
                 onChange={(dateRange) => actions.updateEntry(item.id, { dateRange })}
               />
             </div>
+            <Field
+              label="Location (optional)"
+              value={item.location}
+              limit={limit('location')}
+              placeholder="Indianapolis, IN"
+              onChange={(location) => actions.updateEntry(item.id, { location })}
+            />
 
             <div className="subhead">Bullet points</div>
             {bullets.map((bullet, bulletIndex) => (

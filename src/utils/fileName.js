@@ -1,9 +1,22 @@
 import { plainText } from './richText'
 
-export function resumeFileName(resume, extension) {
-  const base = plainText(resume.header?.name)
+/** Characters no common filesystem accepts in a file name. */
+const ILLEGAL = /[\\/:*?"<>|]/g
+
+export const sanitizeFileName = (value) =>
+  String(value ?? '')
+    .replace(ILLEGAL, '')
+    .replace(/\s+/g, ' ')
     .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '_')
-  return `${base || 'resume'}_CV.${extension}`
+
+/** Suggested name, offered in the download dialog and editable there. */
+export function resumeFileBase(resume) {
+  const name = sanitizeFileName(plainText(resume.header?.name)).replace(/\s+/g, '_')
+  return `${name || 'resume'}_CV`
+}
+
+/** Adds the extension, tolerating a name the user already typed it onto. */
+export function withExtension(base, extension) {
+  const clean = sanitizeFileName(base).replace(new RegExp(`\\.${extension}$`, 'i'), '')
+  return `${clean || 'resume'}.${extension}`
 }
