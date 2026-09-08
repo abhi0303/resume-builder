@@ -1,0 +1,24 @@
+{
+  "name": "resume-builder",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Front-end only CV editor with live template preview and PDF/DOCX export.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "docx": "^9.0.2",
+    "file-saver": "^2.0.5",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}

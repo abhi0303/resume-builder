@@ -1,0 +1,275 @@
+/* Classic Teal — two column academic/research layout.
+   All values are px at 96dpi so the on-screen page equals the exported page.
+   Kept to plain hex colours + flexbox: html2canvas renders this pixel-exactly. */
+
+.tpl-classic-teal {
+  --ct-ink: #14384a;
+  --ct-accent: #2b7c8f;
+  --ct-rule: #1c5265;
+  --ct-text: #333333;
+  --ct-muted: #666666;
+  --ct-card: #eef2f4;
+  --ct-gold: #b8860b;
+
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: 34px 36px 32px;
+  background: #ffffff;
+  color: var(--ct-text);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.tpl-classic-teal * {
+  box-sizing: border-box;
+}
+
+/* ---------- banner ---------- */
+.ct-banner {
+  background: var(--ct-ink);
+  border-radius: 10px;
+  padding: 22px 30px 18px;
+  color: #ffffff;
+}
+
+.ct-banner__name {
+  margin: 0;
+  font-size: 38px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  word-break: break-word;
+}
+
+.ct-banner__title {
+  margin: 6px 0 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #c4d4da;
+}
+
+.ct-banner__rule {
+  height: 1px;
+  background: #4a6d7c;
+  margin: 16px 0 12px;
+}
+
+.ct-sep {
+  padding: 0 9px;
+  color: #8fa9b3;
+}
+
+.ct-banner__contact {
+  font-size: 11px;
+  color: #dbe6ea;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+/* ---------- body grid ---------- */
+.ct-body {
+  display: flex;
+  gap: 30px;
+  margin-top: 22px;
+  align-items: flex-start;
+}
+
+.ct-col--main {
+  flex: 0 0 61%;
+  max-width: 61%;
+}
+
+.ct-col--side {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ---------- section chrome ---------- */
+.ct-section {
+  margin-bottom: 16px;
+}
+
+.ct-section:last-child {
+  margin-bottom: 0;
+}
+
+.ct-section__title {
+  margin: 0 0 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--ct-rule);
+  color: var(--ct-accent);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  word-break: break-word;
+}
+
+/* ---------- summary ---------- */
+.ct-summary {
+  margin: 0;
+  text-align: justify;
+  white-space: pre-wrap;
+  line-height: 1.55;
+}
+
+/* ---------- experience ---------- */
+.ct-entry {
+  margin-bottom: 12px;
+}
+
+.ct-entry:last-child {
+  margin-bottom: 0;
+}
+
+.ct-entry__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.ct-entry__title {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.ct-entry__date {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+  color: var(--ct-muted);
+  text-align: right;
+  max-width: 30%;
+}
+
+.ct-entry__org {
+  margin-top: 2px;
+  font-style: italic;
+  font-size: 11px;
+  color: var(--ct-accent);
+}
+
+/* ---------- bullets ---------- */
+.ct-bullets {
+  margin: 6px 0 0;
+  padding-left: 15px;
+  list-style: none;
+}
+
+.ct-bullets--flat {
+  margin-top: 0;
+}
+
+.ct-bullets li {
+  position: relative;
+  margin-bottom: 3px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.ct-bullets li:last-child {
+  margin-bottom: 0;
+}
+
+.ct-bullets li::before {
+  content: '';
+  position: absolute;
+  left: -11px;
+  top: 6px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #888888;
+}
+
+/* ---------- education ---------- */
+.ct-edu__card {
+  background: var(--ct-card);
+  border-radius: 3px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.ct-edu__card:last-child {
+  margin-bottom: 0;
+}
+
+.ct-edu__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.ct-edu__degree {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ct-ink);
+}
+
+.ct-edu__date {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+  color: var(--ct-muted);
+}
+
+.ct-edu__meta {
+  margin-top: 5px;
+  font-size: 10.5px;
+  color: #7a7a7a;
+}
+
+.ct-edu__badge {
+  margin-top: 7px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ct-gold);
+}
+
+/* ---------- skills ---------- */
+.ct-skills__group {
+  margin-bottom: 12px;
+}
+
+.ct-skills__group:last-child {
+  margin-bottom: 0;
+}
+
+.ct-skills__label {
+  margin: 0 0 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ct-accent);
+}
+
+.ct-tags {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ct-tags li {
+  margin-bottom: 3px;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.ct-square {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 6px;
+  background: var(--ct-accent);
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+.ct-square--gold {
+  background: var(--ct-gold);
+}
