@@ -90,6 +90,42 @@ export const SECTION_TYPES = {
     }),
   },
 
+  highlights: {
+    id: 'highlights',
+    label: 'Titled cards',
+    icon: '◫',
+    hint: 'Title + short description. Projects, Key Achievements, Certifications, Awards…',
+    defaultHeading: 'PROJECTS & PORTFOLIO',
+    defaultColumn: 'side',
+    limits: { heading: 42, title: 48, description: 220, icon: 2 },
+    create: (heading) => ({
+      id: uid('sec'),
+      type: 'highlights',
+      heading: heading || 'PROJECTS & PORTFOLIO',
+      column: 'side',
+      visible: true,
+      items: [createHighlightItem()],
+    }),
+  },
+
+  ratings: {
+    id: 'ratings',
+    label: 'Rated list',
+    icon: '◍',
+    hint: 'A label with a level out of five. Languages, tools, proficiencies…',
+    defaultHeading: 'LANGUAGES',
+    defaultColumn: 'side',
+    limits: { heading: 42, label: 28, note: 18 },
+    create: (heading) => ({
+      id: uid('sec'),
+      type: 'ratings',
+      heading: heading || 'LANGUAGES',
+      column: 'side',
+      visible: true,
+      items: [createRatingItem()],
+    }),
+  },
+
   skillGroups: {
     id: 'skillGroups',
     label: 'Grouped tags',
@@ -136,6 +172,16 @@ export function createEducationItem() {
   }
 }
 
+export function createHighlightItem() {
+  return { id: uid('hl'), title: '', description: '', icon: '' }
+}
+
+export function createRatingItem() {
+  return { id: uid('rt'), label: '', note: '', level: 5 }
+}
+
+export const RATING_MAX = 5
+
 export function createSkillGroup(label = '') {
   return { id: uid('grp'), label, items: [createBulletItem()] }
 }
@@ -158,7 +204,45 @@ export const SECTION_SHAPE = {
   experience: { entriesKey: 'items', childrenKey: 'bullets', createEntry: createExperienceItem, createChild: createBulletItem },
   bullets: { entriesKey: 'items', childrenKey: null, createEntry: createBulletItem },
   education: { entriesKey: 'items', childrenKey: null, createEntry: createEducationItem },
+  highlights: {
+    id: 'highlights',
+    label: 'Titled cards',
+    icon: '◫',
+    hint: 'Title + short description. Projects, Key Achievements, Certifications, Awards…',
+    defaultHeading: 'PROJECTS & PORTFOLIO',
+    defaultColumn: 'side',
+    limits: { heading: 42, title: 48, description: 220, icon: 2 },
+    create: (heading) => ({
+      id: uid('sec'),
+      type: 'highlights',
+      heading: heading || 'PROJECTS & PORTFOLIO',
+      column: 'side',
+      visible: true,
+      items: [createHighlightItem()],
+    }),
+  },
+
+  ratings: {
+    id: 'ratings',
+    label: 'Rated list',
+    icon: '◍',
+    hint: 'A label with a level out of five. Languages, tools, proficiencies…',
+    defaultHeading: 'LANGUAGES',
+    defaultColumn: 'side',
+    limits: { heading: 42, label: 28, note: 18 },
+    create: (heading) => ({
+      id: uid('sec'),
+      type: 'ratings',
+      heading: heading || 'LANGUAGES',
+      column: 'side',
+      visible: true,
+      items: [createRatingItem()],
+    }),
+  },
+
   skillGroups: { entriesKey: 'groups', childrenKey: 'items', createEntry: createSkillGroup, createChild: createBulletItem },
+  highlights: { entriesKey: 'items', childrenKey: null, createEntry: createHighlightItem },
+  ratings: { entriesKey: 'items', childrenKey: null, createEntry: createRatingItem },
 }
 
 export const shapeOf = (section) => SECTION_SHAPE[section.type] || { entriesKey: null, childrenKey: null }

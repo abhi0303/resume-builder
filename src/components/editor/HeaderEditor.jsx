@@ -23,7 +23,16 @@ export default function HeaderEditor({ header, template, dispatch }) {
           placeholder="Heritage Management & Archaeology Professional"
           onChange={(title) => set({ title })}
         />
-        <Field label="Email" value={header.email} limit={limit('email')} onChange={(email) => set({ email })} />
+        <div className="grid-2">
+          <Field label="Email" value={header.email} limit={limit('email')} onChange={(email) => set({ email })} />
+          <Field
+            label="Website / profile"
+            value={header.website}
+            limit={limit('website')}
+            placeholder="linkedin.com/in/you"
+            onChange={(website) => set({ website })}
+          />
+        </div>
         <Field
           label="Address"
           value={header.address}

@@ -6,6 +6,7 @@ export const HEADER_LIMITS = {
   title: 62,
   phone: 24,
   email: 40,
+  website: 34,
   address: 90,
 }
 
