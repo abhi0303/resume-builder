@@ -1109,6 +1109,13 @@ select {
   right: 0;
 }
 
+/* For a toolbar docked at the bottom of the screen, the panel opens upward so
+   it is not hidden behind the keyboard. */
+.color-panel--up {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
 .color-panel__grid {
   display: grid;
   grid-template-columns: repeat(5, 22px);
@@ -1557,5 +1564,49 @@ select {
 
   .add-section .type-btn {
     align-items: center;
+  }
+}
+
+/* ---------------- formatting bar docked above the keyboard ---------------- */
+.formatbar--docked {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 45;
+  /* One scrollable row: two wrapped rows would eat the little space the
+     keyboard leaves behind. */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: none;
+  box-shadow: 0 -6px 16px -10px rgba(20, 56, 74, 0.6);
+  will-change: transform;
+}
+
+.formatbar--docked::-webkit-scrollbar {
+  display: none;
+}
+
+.formatbar--docked .fmt-btn,
+.formatbar--docked .fmt-size,
+.formatbar--docked .formatbar__divider,
+.formatbar--docked .color-host {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 860px) {
+  /* The tab bar would sit under the docked toolbar; it is not reachable with
+     the keyboard up anyway. */
+  .is-editing .mobile-tabs {
+    display: none;
+  }
+
+  /* Keep a focused field clear of the docked toolbar when the browser scrolls
+     it into view. */
+  .field__editable,
+  .heading-input {
+    scroll-margin-bottom: 90px;
   }
 }

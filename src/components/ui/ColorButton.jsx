@@ -9,7 +9,8 @@ export { TEXT_SWATCHES, HIGHLIGHT_SWATCHES, SURFACE_SWATCHES, ACCENT_SWATCHES } 
  * hex box so any colour at all is reachable.
  *
  * `onOpenChange` lets callers pin state that would otherwise be lost when the
- * native picker steals focus (see the formatting toolbar).
+ * native picker steals focus (see the formatting toolbar). `openUp` flips the
+ * panel above the trigger, for a toolbar docked at the bottom of the screen.
  */
 export default function ColorButton({
   className = 'btn btn--sm',
@@ -21,6 +22,7 @@ export default function ColorButton({
   onOpenChange,
   footer,
   align = 'left',
+  openUp = false,
   disabled,
   children,
 }) {
@@ -64,7 +66,7 @@ export default function ColorButton({
       </button>
 
       {open ? (
-        <div className={`color-panel color-panel--${align}`}>
+        <div className={`color-panel color-panel--${align}${openUp ? ' color-panel--up' : ''}`}>
           <div className="color-panel__grid">
             {clearLabel ? (
               <button

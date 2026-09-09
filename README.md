@@ -72,7 +72,14 @@ repo publishes to GitHub Pages under `/resume-builder/` (see `vite.config.js`).
 ### On a phone
 
 Below 860px the split becomes one pane at a time with an **Edit / Preview** switcher at
-the bottom, in thumb reach. Below 560px paired fields stack, and the longest button labels
+the bottom, in thumb reach.
+
+While a field is being edited on a phone, the formatting bar leaves the top of the app and
+docks directly above the keyboard. A software keyboard does not shrink the layout viewport
+— the page is scrolled instead and the top of the app goes off screen — so the bar is
+positioned from `window.visualViewport` (`useDockedAboveKeyboard`), which does track it.
+Docked, it becomes a single scrollable row, its colour panels open upward, and the tab bar
+steps aside. Without `visualViewport` support the bar simply stays where it is. Below 560px paired fields stack, and the longest button labels
 shorten ("Download DOCX" becomes "DOCX"). Inputs are 16px on small screens so iOS does not
 zoom when a field takes focus, tap targets grow on touch pointers, the layout uses `dvh`
 so the collapsing address bar does not clip it, and safe-area insets keep the top bar clear
